@@ -37,9 +37,9 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
     # messagesの順番を逆転させる
     if is_reverse:
         messages.reverse()
-    with open(f"history/{channel.name}-{channel.id}.json", "w") as f:
+    with open(f"history/{channel.id}.json", "w") as f:
         json.dump(messages, f, indent=4, ensure_ascii=False)
-    await ctx.send(f"{channel.name}のメッセージを保存しました -> {count-1} messages")
+    await ctx.send(f"{channel.name}のメッセージを保存しました -> {count-1} messages({channel.id}.json)")
 
 
 class Crawler(commands.Cog):
