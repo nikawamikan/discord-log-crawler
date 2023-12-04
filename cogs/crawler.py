@@ -10,7 +10,10 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
     count = 1
     # サーバー内のチャンネル一覧のidと名前を表示
     for channel in ctx.guild.channels:
-        channels.append({"id": channel.id, "name": channel.name})      
+        # テキストチャンネルのみを抽出
+        if isinstance(channel, discord.TextChannel):
+            channels.append({"id": channel.id, "name": channel.name})      
+        
         
     # メッセージのアーカイブを作成
     async for message in channel.history(limit=None):

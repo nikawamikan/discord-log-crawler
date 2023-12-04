@@ -5,6 +5,7 @@ import os
 
 intents = discord.Intents.all()
 intents.guilds = True
+
 # GUILD_IDSが複数あるか
 if os.getenv("GUILD_IDS").find(",") != -1:
     bot = commands.AutoShardedBot(
