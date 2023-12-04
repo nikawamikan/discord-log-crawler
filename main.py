@@ -5,10 +5,16 @@ import os
 
 intents = discord.Intents.all()
 intents.guilds = True
-bot = commands.AutoShardedBot(
-    intents=intents, debug_guilds=list(
-        map(int, os.getenv("GUILD_IDS").split(",")))
-)
+# GUILD_IDSが複数あるか
+if os.getenv("GUILD_IDS").find(",") != -1:
+    bot = commands.AutoShardedBot(
+        intents=intents, debug_guilds=list(
+            map(int, os.getenv("GUILD_IDS").split(",")))
+    )
+else:
+    bot = commands.Bot(
+        command_prefix="/", intents=intents, debug_guild=int(os.getenv("GUILD_IDS"))
+    )
 
 TOKEN = os.getenv(f"TOKEN")
 
