@@ -1,0 +1,23 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "discord bot",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"dockerComposeFile": "compose.yaml",
+	"workspaceFolder": "/workspace",
+	"service": "main",
+	"postCreateCommand": "pip3 install -r requirements.txt",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.autopep8",
+				"ms-python.vscode-pylance",
+				"ms-python.python"
+			]
+		}
+	}
+	// Configure tool-specific properties.
+	// "customizations": {},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
