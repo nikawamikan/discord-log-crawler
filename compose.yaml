@@ -1,0 +1,8 @@
+services:
+  main:
+    build: .
+    volumes:
+      - ./:/workspace
+    env_file:
+      - .env
+    command: ["python", "main.py"]

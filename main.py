@@ -1,12 +1,15 @@
 import discord
 from discord.ext import commands
 import os
-import asyncio
 
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.guilds = True
-bot = commands.AutoShardedBot(intents=intents)
+bot = commands.AutoShardedBot(
+    intents=intents, debug_guilds=list(
+        map(int, os.getenv("GUILD_IDS").split(",")))
+)
+
 TOKEN = os.getenv(f"TOKEN")
 
 path = "./cogs"
@@ -26,7 +29,7 @@ async def on_ready():
 
 
 bot.load_extensions(
-    'cogs.hoge',
+    'cogs.crawler',
     store=False
 )
 
