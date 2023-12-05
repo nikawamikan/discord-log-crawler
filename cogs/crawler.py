@@ -16,10 +16,10 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
             categories.append({"category_id": category.id, "name": category.name})
     
     # サーバー内のチャンネル一覧のidと名前を表示
-    for channel in ctx.guild.channels:
+    for _channel in ctx.guild.channels:
         # テキストチャンネルのみを抽出
-        if isinstance(channel, discord.TextChannel):
-            channels.append({"category_id": channel.category_id, "channel_id": channel.id, "name": channel.name})      
+        if isinstance(_channel, discord.TextChannel):
+            channels.append({"category_id": _channel.category_id, "channel_id": _channel.id, "name": _channel.name})      
         
         
     # メッセージのアーカイブを作成
