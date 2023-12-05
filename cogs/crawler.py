@@ -4,16 +4,24 @@ from discord.commands import Option, OptionChoice, SlashCommandGroup
 import json
 
 # クローラーを実行する関数
-
-
 async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel, is_reverse: bool = True):
+    channels = []
     messages = []
     count = 1
+    # サーバー内のチャンネル一覧のidと名前を表示
+    for channel in ctx.guild.channels:
+        # テキストチャンネルのみを抽出
+        if isinstance(channel, discord.TextChannel):
+            channels.append({"id": channel.id, "name": channel.name})      
+        
+        
+    # メッセージのアーカイブを作成
     async for message in channel.history(limit=None):
         if count % 1000 == 0:
             await ctx.send(f"進捗: {channel.name} -> {count}")
         messages.append(
             {
+                "channel_id": message.channel.id,
                 "author_id": message.author.id,
                 "author": message.author.name,
                 "content": message.content,
@@ -21,13 +29,17 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
             }
         )
         count += 1
+    
+    # channels.jsonを作成
+    with open(f"history/_channels.json", "w") as f:
+        json.dump(channels, f, indent=4, ensure_ascii=False)
 
     # messagesの順番を逆転させる
     if is_reverse:
         messages.reverse()
-    with open(f"history/{channel.name}-{channel.id}.json", "w") as f:
+    with open(f"history/{channel.id}.json", "w") as f:
         json.dump(messages, f, indent=4, ensure_ascii=False)
-    await ctx.send(f"{channel.name}のメッセージを保存しました -> {count-1} messages")
+    await ctx.send(f"{channel.name}のメッセージを保存しました -> {count-1} messages({channel.id}.json)")
 
 
 class Crawler(commands.Cog):
