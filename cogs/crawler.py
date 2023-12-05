@@ -5,9 +5,16 @@ import json
 
 # クローラーを実行する関数
 async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel, is_reverse: bool = True):
+    categories = []
     channels = []
     messages = []
     count = 1
+    # チャンネルのカテゴリーをすべて取得
+    for category in ctx.guild.categories:
+        # カテゴリー内がすべてボイスチャンネルの場合は除外
+        if len(category.text_channels) != 0:
+            categories.append({"id": category.id, "name": category.name})
+    
     # サーバー内のチャンネル一覧のidと名前を表示
     for channel in ctx.guild.channels:
         # テキストチャンネルのみを抽出
@@ -29,6 +36,10 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
             }
         )
         count += 1
+        
+    # _categories.jsonを作成
+    with open(f"history/_categories.json", "w") as f:
+        json.dump(categories, f, indent=4, ensure_ascii=False)
     
     # channels.jsonを作成
     with open(f"history/_channels.json", "w") as f:
