@@ -5,12 +5,22 @@ import json
 
 # クローラーを実行する関数
 async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel, is_reverse: bool = True):
+    categories = []
     channels = []
     messages = []
     count = 1
+    # チャンネルのカテゴリーをすべて取得
+    for category in ctx.guild.categories:
+        # カテゴリー内がすべてボイスチャンネルの場合は除外
+        if len(category.text_channels) != 0:
+            categories.append({"category_id": category.id, "name": category.name})
+    
     # サーバー内のチャンネル一覧のidと名前を表示
-    for channel in ctx.guild.channels:
-        channels.append({"id": channel.id, "name": channel.name})      
+    for _channel in ctx.guild.channels:
+        # テキストチャンネルのみを抽出
+        if isinstance(_channel, discord.TextChannel):
+            channels.append({"category_id": _channel.category_id, "channel_id": _channel.id, "name": _channel.name})      
+        
         
     # メッセージのアーカイブを作成
     async for message in channel.history(limit=None):
@@ -26,6 +36,10 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
             }
         )
         count += 1
+        
+    # _categories.jsonを作成
+    with open(f"history/_categories.json", "w") as f:
+        json.dump(categories, f, indent=4, ensure_ascii=False)
     
     # channels.jsonを作成
     with open(f"history/_channels.json", "w") as f:
@@ -34,9 +48,9 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
     # messagesの順番を逆転させる
     if is_reverse:
         messages.reverse()
-    with open(f"history/{channel.name}-{channel.id}.json", "w") as f:
+    with open(f"history/{channel.id}.json", "w") as f:
         json.dump(messages, f, indent=4, ensure_ascii=False)
-    await ctx.send(f"{channel.name}のメッセージを保存しました -> {count-1} messages")
+    await ctx.send(f"{channel.name}のメッセージを保存しました -> {count-1} messages({channel.id}.json)")
 
 
 class Crawler(commands.Cog):
