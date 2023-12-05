@@ -13,13 +13,13 @@ async def crawler(ctx: discord.ApplicationContext, channel: discord.TextChannel,
     for category in ctx.guild.categories:
         # カテゴリー内がすべてボイスチャンネルの場合は除外
         if len(category.text_channels) != 0:
-            categories.append({"id": category.id, "name": category.name})
+            categories.append({"category_id": category.id, "name": category.name})
     
     # サーバー内のチャンネル一覧のidと名前を表示
     for channel in ctx.guild.channels:
         # テキストチャンネルのみを抽出
         if isinstance(channel, discord.TextChannel):
-            channels.append({"id": channel.id, "name": channel.name})      
+            channels.append({"category_id": channel.category_id, "channel_id": channel.id, "name": channel.name})      
         
         
     # メッセージのアーカイブを作成
